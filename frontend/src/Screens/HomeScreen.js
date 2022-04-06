@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,11 +7,25 @@ import Message from "../Components/message";
 import Loader from "../Components/loader";
 import Paginate from "../Components/Paginate";
 import Meta from "../Components/Meta";
+import AlertMessage from "../Components/AlertMessage";
 import { listProducts } from "../actions/productActions";
 import { useParams } from "react-router-dom";
 import ProductCarousel from "../Components/ProductCarousel";
 
 const HomeScreen = () => {
+
+  const [alert, setAlert] = useState(null);
+
+  const showAlert = (message, type) => {
+    setAlert({
+      message,
+      type
+    })
+    setTimeout(() => {
+      setAlert(null)
+    }, 2000);
+  }
+
   const { keyword } = useParams();
 
   const pageNumber = useParams().pageNumber || 1;
@@ -28,6 +42,7 @@ const HomeScreen = () => {
   return (
     <>
       <Meta />
+      <AlertMessage alert={alert} />
       {!keyword ? (
         <ProductCarousel />
       ) : (
@@ -46,7 +61,7 @@ const HomeScreen = () => {
           <Row>
             {products.map((product) => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                <Product product={product} />
+                <Product showAlert={showAlert} product={product} />
               </Col>
             ))}
           </Row>

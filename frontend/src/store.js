@@ -29,6 +29,7 @@ import {
   orderListReducer,
   orderDeliverReducer,
 } from "./reducers/orderReducers";
+import { wishlistReducer } from "./reducers/wishlistReducers";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -39,6 +40,7 @@ const reducer = combineReducers({
   productReviewCreate: productReviewCreateReducer,
   productTopRated: productTopRatedReducer,
   cart: cartReducer,
+  wishlist: wishlistReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
@@ -58,6 +60,10 @@ const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))
   : [];
 
+const wishlistItemsFromStorage = localStorage.getItem('wishlistItems')
+  ? JSON.parse(localStorage.getItem('wishlistItems'))
+  : [];
+
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
@@ -70,6 +76,9 @@ const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: shippingAddressFromStorage,
+  },
+  wishlist: {
+    wishlistItems: wishlistItemsFromStorage,
   },
   userLogin: { userInfo: userInfoFromStorage },
 };

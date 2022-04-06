@@ -27,6 +27,11 @@ const Header = () => {
             <Nav
               className="ml-auto  my-2 my-lg-0"
             >
+              <LinkContainer to="/wishlist">
+                <Nav.Link>
+                  <i className="fas fa-heart" /> Wishlist
+                </Nav.Link>
+              </LinkContainer>
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <i className="fas fa-shopping-cart" /> Cart
