@@ -15,7 +15,9 @@ const PaymentScreen = () => {
     navigate("/shipping");
   }
 
-  const [paymentMethod, setPaymentMethod] = useState("payPal");
+  const [paymentMethod, setPaymentMethod] = useState("Razorpay");
+
+  console.log(paymentMethod);
 
   const dispatch = useDispatch();
 
@@ -30,19 +32,28 @@ const PaymentScreen = () => {
       <CheckoutSteps step1 step2 step3 />
       <h1>Payment method</h1>
       <Form onSubmit={submitHandler}>
-          <Form.Group>
-              <Form.Label as='legend' >Select Method</Form.Label>
+        <Form.Group>
+          <Form.Label as="legend">Select Method</Form.Label>
           <Col>
           <Form.Check
-          type='radio'
-          label='PayPal or credit card'
-          id="PayPal"
-          name="paymentMethod"
-          value='PayPal'
-          checked
-          onChange={(e)=>setPaymentMethod(e.target.value)}></Form.Check>
+            type="radio"
+            label="RazorPay"
+            id="RazorPay"
+            name="paymentMethod"
+            value="RazorPay"
+            checked
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          ></Form.Check>
+            <Form.Check
+              type="radio"
+              label="Paypal or Credit Card"
+              id="PayPal"
+              name="paymentMethod"
+              value="PayPal"
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            ></Form.Check>
           </Col>
-          </Form.Group>
+        </Form.Group>
         <Button type="submit" variant="primary">
           Continue
         </Button>

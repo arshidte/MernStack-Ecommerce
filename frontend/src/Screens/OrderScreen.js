@@ -14,6 +14,7 @@ import {
 import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
+  ORDER_PAY_SUCCESS,
 } from "../constants/orderConstants";
 
 const OrderScreen = () => {
@@ -45,10 +46,61 @@ const OrderScreen = () => {
     );
   }
 
-  useEffect(() => {
-    if(!userInfo){
-      navigate('/login')
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const showRazorpay = async () => {
+    const res = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+    );
+
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
     }
+
+    const { data } = await axios.post(`/razorpay/${orderId}`);
+
+    const options = {
+      key: "rzp_test_pDlNWQaqjrmrcm",
+      currency: data.currency,
+      amount: data.amount.toString(),
+      order_id: data.id,
+      name: "shopNow",
+      description: "Make the payment now",
+      image: "",
+      handler: async (response) => {
+        await axios.post(`/razorpay/success/${orderId}`);
+        dispatch({ type: ORDER_PAY_SUCCESS });
+
+        alert("Transaction successful");
+      },
+      prefill: {
+        name: "Arshid TE",
+        email: "arshiddiyan.te.adte@gmail.com",
+        phone_number: "7012394800",
+      },
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  };
+
+  useEffect(() => {
+    if (!userInfo) {
+      navigate("/login");
+    }
+
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
       const script = document.createElement("script");
@@ -61,8 +113,7 @@ const OrderScreen = () => {
       document.body.appendChild(script);
     };
 
-    // dispatch(getOrderDetails(orderId))
-    if (!order || successPay || successDeliver) {
+    if (!order || successPay || successDeliver || order._id !== orderId) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
@@ -75,8 +126,12 @@ const OrderScreen = () => {
     }
   }, [dispatch, orderId, successPay, order, successDeliver]);
 
-  const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
+  // const successPaymentHandler = (paymentResult) => {
+  //   console.log(paymentResult);
+  //   dispatch(payOrder(orderId, paymentResult));
+  // };
+
+  const submitPaymentHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));
   };
 
@@ -190,7 +245,8 @@ const OrderScreen = () => {
                   <Col>₹{order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid && (
+
+              {!order.isPaid && order.paymentMethod === "PayPal" && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
                   {!sdkReady ? (
@@ -198,21 +254,36 @@ const OrderScreen = () => {
                   ) : (
                     <PayPalButton
                       amount={order.totalPrice}
-                      onSuccess={successPaymentHandler}
+                      onSuccess={submitPaymentHandler}
                     />
                   )}
                 </ListGroup.Item>
               )}
-              {loadingDeliver && <Loader />}
-              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
-                <Button
-                  className="btn btn - block"
-                  type="button"
-                  onClick={deliverHandler}
-                >
-                  Mark as delivered
-                </Button>
+
+              {!order.isPaid && order.paymentMethod === "Razorpay" && (
+                <ListGroup.Item>
+                  <Button
+                    onClick={showRazorpay}
+                    className="btn btn-block round"
+                  >
+                    Pay with RazorPay
+                  </Button>
+                </ListGroup.Item>
               )}
+
+              {loadingDeliver && <Loader />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <Button
+                    className="btn btn - block"
+                    type="button"
+                    onClick={deliverHandler}
+                  >
+                    Mark as delivered
+                  </Button>
+                )}
             </ListGroup>
           </Card>
         </Col>

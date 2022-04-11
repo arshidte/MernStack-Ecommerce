@@ -19,11 +19,11 @@ const LoginScreen = () => {
   const { loading, error, userInfo } = userLogin
 
   const [searchParams,setSearchParams] =useSearchParams();
+
   const redirect=searchParams.get('test1') ||''
 
   useEffect(()=>{
     if(userInfo){
-      // navigate(redirect)
       navigate(`/${redirect}`)
     }
   },[userInfo, redirect])
@@ -68,7 +68,7 @@ const LoginScreen = () => {
       <Row className="py-3">
         <Col>
           New customer?{" "}
-          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
+          <Link to={redirect ? `/register?test1=${redirect}` : "/register"}>
             Register
           </Link>
         </Col>

@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../Components/message";
 import CheckoutSteps from "../Components/CheckoutSteps";
 import { createOrder } from "../actions/orderActions";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
 
 const PlaceOrderScreen = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const cart = useSelector((state) => state.cart);
+  console.log(cart);
 
   //Calculate the prices using reduce array method
 
@@ -28,9 +30,12 @@ const PlaceOrderScreen = () => {
   useEffect(()=>{
     if(success){
       navigate(`/order/${order._id}`)
+      dispatch({ type: ORDER_CREATE_RESET })
     }
     // eslint-disable-next-line
   },[navigate, success])
+
+  console.log(cart);
 
   const placeOrderHandler = () => {
       dispatch(createOrder({

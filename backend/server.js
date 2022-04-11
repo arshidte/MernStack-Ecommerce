@@ -3,6 +3,10 @@ import express from "express";
 import dotenv from "dotenv";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
+import Order from './models/orderModel.js'
+import Razorpay from 'razorpay'
+import shortid from "shortid"
+import bodyparser from 'body-parser'
 
 //routes
 import productRoutes from "./routes/productRoutes.js";
@@ -40,6 +44,52 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running...");
   });
 }
+
+//Razorpay
+
+var razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+})
+
+const getOrder = async (id) => {
+  const data = Order.findById(id).populate('user', 'name email')
+  return data
+}
+
+app.post('/razorpay/:id', async (req,res)=>{
+  const order = await Order.findById(req.params.id).populate('user', 'name email')
+  const payment_capture = 1
+  const currency = 'INR'
+  const options = {
+    amount: order.totalPrice * 100,
+    currency,
+    receipt: shortid.generate(),
+    payment_capture,
+  }
+
+  try {
+    const response = await razorpay.orders.create(options)
+    res.status(200).json({
+      id: response.id,
+      currency: response.currency,
+      amount: response.amount,
+    })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.post('/razorpay/success/:id', async (req, res) => {
+  const order = await getOrder(req.params.id)
+  order.isPaid = true
+  order.paidAt = Date.now()
+  await order.save()
+  res.status(200).json('success')
+})
+
+////////////
+app.use(bodyparser.urlencoded({ extended: true }))
 
 app.use(notFound);
 
