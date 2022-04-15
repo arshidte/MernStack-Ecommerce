@@ -19,10 +19,12 @@ import ProductListScreen from "./Screens/ProductListScreen";
 import ProductEditScreen from "./Screens/ProductEditScreen";
 import OrderListScreen from "./Screens/OrderListScreen";
 import WishlistScreen from "./Screens/WishlistScreen";
+import Banner from "./Components/Banner";
 
 const App = () => {
   return (
     <Router>
+      <Banner />
       <Header />
       <main className="py-3">
         <Container>
@@ -39,15 +41,30 @@ const App = () => {
             <Route path="/wishlist" element={<WishlistScreen />} />
             <Route path="/admin/userlist" element={<UserListScreen />} />
             <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
-            <Route path="/admin/productlist" element={<ProductListScreen />} exact />
-            <Route path="/admin/productlist/:pageNumber" element={<ProductListScreen />} exact />
-            <Route path="/admin/product/:id/edit" element={<ProductEditScreen />} />
+            <Route
+              path="/admin/productlist"
+              element={<ProductListScreen />}
+              exact
+            />
+            <Route
+              path="/admin/productlist/:pageNumber"
+              element={<ProductListScreen />}
+              exact
+            />
+            <Route
+              path="/admin/product/:id/edit"
+              element={<ProductEditScreen />}
+            />
             <Route path="/admin/orderlist" element={<OrderListScreen />} />
             <Route path="/cart/:id" element={<CartScreen />} />
             <Route path="/wishlist/:id" element={<WishlistScreen />} />
             <Route path="/search/:keyword" element={<HomeScreen />} exact />
             <Route path="/page/:pageNumber" element={<HomeScreen />} exact />
-            <Route path="/search/:keyword/page/:pageNumber" element={<HomeScreen />} exact />
+            <Route
+              path="/search/:keyword/page/:pageNumber"
+              element={<HomeScreen />}
+              exact
+            />
             <Route path="/" element={<HomeScreen />} exact />
             <Route path="/*" element={<HomeScreen />} />
           </Routes>
