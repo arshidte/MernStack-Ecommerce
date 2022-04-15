@@ -32,6 +32,8 @@ const OrderScreen = () => {
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
+  console.log("Orders are");
+  console.log(order);
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
@@ -39,12 +41,12 @@ const OrderScreen = () => {
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
-  if (!loading) {
-    order.itemsPrice = order.orderItems.reduce(
-      (acc, item) => acc + item.price * item.qty,
-      0
-    );
-  }
+  // if (!loading) {
+  //   order.itemsPrice = order.orderItems.reduce(
+  //     (acc, item) => acc + item.price * item.qty,
+  //     0
+  //   );
+  // }
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -126,10 +128,6 @@ const OrderScreen = () => {
     }
   }, [dispatch, orderId, successPay, order, successDeliver]);
 
-  // const successPaymentHandler = (paymentResult) => {
-  //   console.log(paymentResult);
-  //   dispatch(payOrder(orderId, paymentResult));
-  // };
 
   const submitPaymentHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));
@@ -205,7 +203,7 @@ const OrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} X ₹{item.price} = ₹{item.qty * item.price}
+                          {item.qty} X {item.discountPrice > 0 ? <>₹{item.discountPrice}</> : <>₹{item.price}</>} = ₹{item.qty * item.discountPrice}
                         </Col>
                       </Row>
                     </ListGroup.Item>

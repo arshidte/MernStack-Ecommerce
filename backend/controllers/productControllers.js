@@ -47,6 +47,7 @@ const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: "Sample name",
     price: 0,
+    discountPrice: 0,
     user: req.user._id,
     image: "images/sample.jpeg",
     brand: "Sample brand",
@@ -60,7 +61,7 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, image, brand, category, countInStock } =
+  const { name, price, discountPrice, description, image, brand, category, countInStock } =
     req.body;
 
   const product = await Product.findById(req.params.id);
@@ -68,14 +69,15 @@ const updateProduct = asyncHandler(async (req, res) => {
   if (product) {
     product.name = name;
     product.price = price;
+    product.discountPrice = Number(discountPrice);
     product.description = description;
     product.image = image;
     product.brand = brand;
     product.category = category;
     product.countInStock = countInStock;
 
-    const createdProduct = await product.save();
-    res.json(createdProduct);
+    const updatedProduct = await product.save();
+    res.json(updatedProduct);
   } else {
     res.status(401);
     throw new Error("Product not found");

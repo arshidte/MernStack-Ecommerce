@@ -24,11 +24,12 @@ const Product = ({ product, showAlert }) => {
       <Card.Text
         style={{
           display: "flex",
-          justifyContent: "end",
+          justifyContent: "space-between",
           textDecoration: "none",
           margin: "5px",
         }}
       >
+        {product.discountPrice>1 && <img src="https://icon2.cleanpng.com/20171221/wyq/special-offer-png-5a3c34127f68d4.8340031815138949305219.jpg" style={{width:"50px"}}></img>}
         <OverlayTrigger
           placement="left"
           delay={{ show: 10, hide: 400 }}
@@ -55,7 +56,9 @@ const Product = ({ product, showAlert }) => {
             />
           </div>
         </Card.Text>
-        <Card.Text as="h3">₹{product.price}</Card.Text>
+        <span>{product.discountPrice>0 && <s>₹{product.price}</s>} </span>
+        <span style={{fontSize:"1.3rem"}}>{product.discountPrice>0 && <span>₹{product.discountPrice}</span>}</span>
+        <p style={{fontSize:"1.3rem"}}>{product.discountPrice<=0 && <span>₹{product.price}</span>}</p>
       </Card.Body>
     </Card>
   );

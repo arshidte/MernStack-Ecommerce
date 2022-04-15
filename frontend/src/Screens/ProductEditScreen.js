@@ -12,11 +12,13 @@ import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 const ProductEditScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const params = useParams();
 
-  const productId = useParams().id;
+  const productId = params.id;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
+  const [discountPrice, setDiscountPrice] = useState(0);
   const [image, setImage] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -44,6 +46,7 @@ const ProductEditScreen = () => {
       } else {
         setName(product.name);
         setPrice(product.price);
+        setDiscountPrice(product.discountPrice);
         setImage(product.image);
         setCategory(product.category);
         setDescription(product.description);
@@ -54,28 +57,27 @@ const ProductEditScreen = () => {
   }, [product, dispatch, productId, navigate, successUpdate]);
 
   const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('image', file)
-    setUploading(true)
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
 
     try {
       const config = {
         headers: {
-          'Content-Type':'multipart/form-data'
-        }
-      }
+          "Content-Type": "multipart/form-data",
+        },
+      };
 
-      const { data } = await axios.post('/api/upload', formData, config)
+      const { data } = await axios.post("/api/upload", formData, config);
 
-      setImage(data)
-      setUploading(false)
+      setImage(data);
+      setUploading(false);
     } catch (error) {
-      console.error(error)
-      setUploading(false)
+      console.error(error);
+      setUploading(false);
     }
-
-  }
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -84,6 +86,7 @@ const ProductEditScreen = () => {
         _id: productId,
         name,
         price,
+        discountPrice,
         category,
         brand,
         image,
@@ -128,6 +131,16 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
+            <Form.Group controlId="discountPrice">
+              <Form.Label>Discounted Price</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter discounted price"
+                value={discountPrice}
+                onChange={(e) => setDiscountPrice(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
             <Form.Group controlId="image">
               <Form.Label>Image</Form.Label>
               <Form.Control
@@ -136,10 +149,11 @@ const ProductEditScreen = () => {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
-              <Form.Control type="file" 
+              <Form.Control
+                type="file"
                 label="Choose File"
                 onChange={uploadFileHandler}
-                />
+              />
               {uploading && <Loader />}
             </Form.Group>
 

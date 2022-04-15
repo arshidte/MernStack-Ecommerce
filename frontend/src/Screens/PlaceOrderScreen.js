@@ -12,12 +12,11 @@ const PlaceOrderScreen = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const cart = useSelector((state) => state.cart);
-  console.log(cart);
 
   //Calculate the prices using reduce array method
 
   cart.itemsPrice = cart.cartItems.reduce(
-      (acc, item)=>acc + item.price * item.qty, 0
+      (acc, item)=>acc + (item.discountPrice > 0 ? item.discountPrice : item.price) * item.qty, 0
   )
 
   cart.shippingPrice = cart.itemsPrice > 199 ? 0 : 60
@@ -26,6 +25,7 @@ const PlaceOrderScreen = () => {
 
   const orderCreate = useSelector(state => state.orderCreate)
   const { order, success, error } = orderCreate
+  
 
   useEffect(()=>{
     if(success){
@@ -35,7 +35,6 @@ const PlaceOrderScreen = () => {
     // eslint-disable-next-line
   },[navigate, success])
 
-  console.log(cart);
 
   const placeOrderHandler = () => {
       dispatch(createOrder({
@@ -91,8 +90,8 @@ const PlaceOrderScreen = () => {
                             </Link>
                           </Col>
                           <Col md={4}>
-                            {item.qty} X ₹{item.price} = ₹
-                            {item.qty * item.price}
+                            {item.qty} X {item.discountPrice > 0 ? <>₹{item.discountPrice}</> : <>₹{item.price}</>} = ₹
+                            {item.qty * (item.discountPrice > 0 ? item.discountPrice : item.price)}
                           </Col>
                         </Row>
                       </ListGroup.Item>
