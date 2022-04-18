@@ -12,6 +12,7 @@ import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 const ProfileScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [number, setNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
@@ -42,6 +43,7 @@ const ProfileScreen = () => {
       } else {
         setName(user.name);
         setEmail(user.email);
+        setNumber(user.number);
       }
     }
   }, [userInfo, dispatch, navigate, user, success]);
@@ -51,7 +53,7 @@ const ProfileScreen = () => {
     if (password !== confirmPassword) {
       setMessage("Passwords do not match!");
     } else {
-      dispatch(updateUserProfile({ id: user._id, name, email, password }));
+      dispatch(updateUserProfile({ id: user._id, name, email, number, password }));
     }
   };
 
@@ -81,6 +83,16 @@ const ProfileScreen = () => {
               placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="number">
+            <Form.Label>Number</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter Mobile Number"
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
             ></Form.Control>
           </Form.Group>
 

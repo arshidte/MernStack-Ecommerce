@@ -16,6 +16,7 @@ const UserEditScreen = () => {
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [number, setNumber] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
   const userDetails = useSelector((state) => state.userDetails);
@@ -34,6 +35,7 @@ const UserEditScreen = () => {
       }else{
         setName(user.name)
         setEmail(user.email)
+        setNumber(user.number)
         setIsAdmin(user.isAdmin)
       }
     }
@@ -41,7 +43,7 @@ const UserEditScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(updateUser({ _id: userId, name, email, isAdmin }))
+    dispatch(updateUser({ _id: userId, name, email, number, isAdmin }))
   };
 
   return (
@@ -76,6 +78,16 @@ const UserEditScreen = () => {
                 placeholder="Enter Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="number">
+              <Form.Label>Mobile Number</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter Mobile Number"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
               ></Form.Control>
             </Form.Group>
 

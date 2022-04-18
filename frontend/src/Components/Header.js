@@ -4,6 +4,7 @@ import { logout } from "../actions/userActions";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import SearchBox from "./SearchBox";
+import axios from "axios";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -11,7 +12,15 @@ const Header = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    // if(userInfo.email === "demomail@shopnow.com"){
+    //   const config = {
+    //     headers: {
+    //       Authorization: `Bearer ${userInfo.token}`,
+    //     },
+    //   };
+    //   await axios.delete("/api/users/deleteguest", config)
+    // }
     dispatch(logout())
   }
   return (
