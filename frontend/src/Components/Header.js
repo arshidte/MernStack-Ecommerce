@@ -13,14 +13,6 @@ const Header = () => {
   const { userInfo } = userLogin;
 
   const logoutHandler = async () => {
-    // if(userInfo.email === "demomail@shopnow.com"){
-    //   const config = {
-    //     headers: {
-    //       Authorization: `Bearer ${userInfo.token}`,
-    //     },
-    //   };
-    //   await axios.delete("/api/users/deleteguest", config)
-    // }
     dispatch(logout())
   }
   return (
@@ -73,8 +65,8 @@ const Header = () => {
                 <LinkContainer to='/admin/orderlist'>
                   <NavDropdown.Item>Orders</NavDropdown.Item>
                 </LinkContainer>
-                <LinkContainer to=''>
-                  <NavDropdown.Item>Generate coupens</NavDropdown.Item>
+                <LinkContainer to='/admin/salesreport'>
+                  <NavDropdown.Item>Sales Report</NavDropdown.Item>
                 </LinkContainer>
               </NavDropdown>
               )}
